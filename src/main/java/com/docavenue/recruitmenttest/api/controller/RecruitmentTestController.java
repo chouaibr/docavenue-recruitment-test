@@ -3,11 +3,15 @@
  */
 package com.docavenue.recruitmenttest.api.controller;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +26,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author crabhi
  *
  */
+// permitting cross origin requests, for consumption of the client application
+// (docavenue-recruitment-test-front)
+@CrossOrigin(origins = "http://localhost:4200")
 @Controller
 @RequestMapping("/recruitmenttest/v1")
 @EnableSwagger2
@@ -36,8 +43,11 @@ public class RecruitmentTestController extends RecruitmentTestExceptionHandler i
 	@Override
 	public ResponseEntity<List<Post>> getPosts() {
 
-		ResponseEntity<List> response = restTemplate.getForEntity(config.getJsonPlaceHolderPostUrl(), List.class);
-		return ResponseEntity.ok().body(response.getBody());
+		Comparator<Post> comparatorTitle = (p1, p2) -> p1.getTitle().compareTo(p2.getTitle());
+
+		ResponseEntity<Post[]> response = restTemplate.getForEntity(config.getJsonPlaceHolderPostUrl(), Post[].class);
+		return ResponseEntity.ok().body(Arrays.asList(response.getBody()).stream().limit(50).sorted(comparatorTitle)
+				.collect(Collectors.toList()));
 	}
 
 }
