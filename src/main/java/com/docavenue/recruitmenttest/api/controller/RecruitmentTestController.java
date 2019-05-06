@@ -3,10 +3,7 @@
  */
 package com.docavenue.recruitmenttest.api.controller;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +16,7 @@ import com.docavenue.recruitmenttest.api.RecruitmentTestApi;
 import com.docavenue.recruitmenttest.api.config.RecruitmentTestConfiguration;
 import com.docavenue.recruitmenttest.api.exception.RecruitmentTestExceptionHandler;
 import com.docavenue.recruitmenttest.api.model.Post;
+import com.docavenue.recruitmenttest.api.util.RecruitmentTestUtil;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -42,12 +40,8 @@ public class RecruitmentTestController extends RecruitmentTestExceptionHandler i
 
 	@Override
 	public ResponseEntity<List<Post>> getPosts() {
-
-		Comparator<Post> comparatorTitle = (p1, p2) -> p1.getTitle().compareTo(p2.getTitle());
-
 		ResponseEntity<Post[]> response = restTemplate.getForEntity(config.getJsonPlaceHolderPostUrl(), Post[].class);
-		return ResponseEntity.ok().body(Arrays.asList(response.getBody()).stream().limit(50).sorted(comparatorTitle)
-				.collect(Collectors.toList()));
+		return ResponseEntity.ok().body(RecruitmentTestUtil.postSortByTitle(response.getBody()));
 	}
 
 }
