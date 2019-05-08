@@ -18,6 +18,7 @@ import com.docavenue.recruitmenttest.api.exception.RecruitmentTestExceptionHandl
 import com.docavenue.recruitmenttest.api.model.Post;
 import com.docavenue.recruitmenttest.api.util.RecruitmentTestUtil;
 
+import io.swagger.annotations.ApiOperation;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -38,6 +39,8 @@ public class RecruitmentTestController extends RecruitmentTestExceptionHandler i
 	@Autowired
 	private RecruitmentTestConfiguration config;
 
+	@ApiOperation(value = "GET Posts", notes = "Return the first 50 posts sorted alphabetically on the \"title\" field", response = List.class, tags = {
+			"Recruitment Test Controller" })
 	@Override
 	public ResponseEntity<List<Post>> getPosts() {
 		ResponseEntity<Post[]> response = restTemplate.getForEntity(config.getJsonPlaceHolderPostUrl(), Post[].class);
