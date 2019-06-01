@@ -36,7 +36,7 @@ public class Element {
 		// If the element doesn't already belong to a chain OR it's the only element in
 		// the Chain
 		if (this.parent == null || (this.isFirst() && this.isLast())) {
-			kill();
+			this.parent = null;
 			return;
 		}
 
@@ -54,16 +54,7 @@ public class Element {
 			this.next.prev = null;
 		}
 
-		// Destroy this Element anyway
-		kill();
-	}
-
-	/**
-	 * Kill this element
-	 */
-	private void kill() {
-		this.next = null;
-		this.prev = null;
+		// Delete this Element anyway
 		this.parent = null;
 	}
 
